@@ -16,7 +16,11 @@ export const manifest = {
     { match: { className: "Button", inside: { clickable: true, textContains: "Mix - " } }, hide: true },
     // A playlist in History has no name of its own, so its menu is told by being inside something to press.
     {
-      match: { className: "Button", contentDescription: "Action menu", inside: { className: "Button", clickable: true } },
+      match: {
+        className: "Button",
+        contentDescription: "Action menu",
+        inside: { className: "Button", clickable: true },
+      },
       hide: true,
     },
   ],
