@@ -1,43 +1,53 @@
 export const manifest = {
-  id: 'play-store-actions',
-  name: 'Play Store row actions',
-  version: '1.1',
-  author: 'Aryan Choudhary',
+  id: "play-store-actions",
+  name: "Play Store row actions",
+  version: "1.1",
+  author: "Aryan Choudhary",
   minApiVersion: 1,
   testedApiVersion: 1,
   description:
-    'Skips the buttons inside each row in Play Store lists, such as Update and Expand in Manage apps, and puts them in the row\'s Actions menu instead.',
-  apps: ['com.android.vending'],
-  // speech: the rule that hides the buttons. input: onActions. screen: reading the row's
-  // buttons. actions: pressing them.
-  permissions: ['screen', 'actions', 'speech', 'input'],
-  // Play Store's view ids are all the same and its wording changes with the language, so a button
-  // is told by its place: anything that can be pressed inside a row that can be pressed. Only the
-  // two kinds of button a row has are named, because the account button is a row around an
-  // old-style view that holds its name, and hiding that view leaves nothing to read.
+    "Skips the buttons inside each row in Play Store lists, such as Update and Expand in Manage apps, " +
+    "and puts them in the row's Actions menu instead.",
+  apps: ["com.android.vending"],
+  permissions: ["screen", "actions", "speech", "input"],
+  // Only these two kinds are hidden: the account button wraps an old-style view that holds its name.
   rules: [
-    { match: { clickable: true, className: 'android.view.View', inside: { clickable: true, className: 'android.view.View' } }, hide: 'all' },
-    { match: { clickable: true, className: 'android.widget.ImageView', inside: { clickable: true, className: 'android.view.View' } }, hide: 'all' },
+    {
+      match: {
+        clickable: true,
+        className: "android.view.View",
+        inside: { clickable: true, className: "android.view.View" },
+      },
+      hide: "all",
+    },
+    {
+      match: {
+        clickable: true,
+        className: "android.widget.ImageView",
+        inside: { clickable: true, className: "android.view.View" },
+      },
+      hide: "all",
+    },
   ],
 };
 
 const MAX_BUTTONS = 8;
-const BUTTON_CLASSES = ['android.view.View', 'android.widget.ImageView'];
+const BUTTON_CLASSES = ["android.view.View", "android.widget.ImageView"];
 const LABEL_DEPTH = 3;
 
 // The Update button has no name of its own; the name is on an item inside it.
 const labelOf = (item, depth = LABEL_DEPTH) => {
   const own = item.contentDescription || item.text;
-  if (own || depth === 0) return own || '';
+  if (own || depth === 0) return own || "";
   for (const child of item.children) {
     const label = labelOf(child, depth - 1);
     if (label) return label;
   }
-  return '';
+  return "";
 };
 
 backtalk.onActions((item) => {
-  if (!item.clickable || item.className !== 'android.view.View') return;
+  if (!item.clickable || item.className !== "android.view.View") return;
   const actions = [];
   for (const button of item.findAll({ clickable: true }, MAX_BUTTONS)) {
     if (button.equals(item) || !BUTTON_CLASSES.includes(button.className)) continue;
