@@ -4,7 +4,7 @@ export const manifest = {
   version: "1.2",
   author: "Aryan Choudhary",
   minApiVersion: 1,
-  testedApiVersion: 1,
+  testedApiVersion: 2,
   description:
     "Skips the buttons inside each video in YouTube lists, and puts them in the video's Actions menu instead.",
   apps: ["com.google.android.youtube"],
