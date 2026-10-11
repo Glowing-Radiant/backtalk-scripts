@@ -1,7 +1,7 @@
 export const manifest = {
   id: "youtube-actions",
   name: "YouTube video actions",
-  version: "1.4",
+  version: "1.4.1",
   author: "Aryan Choudhary",
   minApiVersion: 1,
   testedApiVersion: 2,
@@ -23,6 +23,8 @@ export const manifest = {
       },
       hide: true,
     },
+    // A video in History.
+    { id: "contextual_menu_anchor", hide: true },
   ],
 };
 
@@ -34,6 +36,10 @@ const isVideo = (item) => item.clickable && /play (video|short)|^mix - /i.test(i
 const title = (label) => (label.startsWith("Action menu for") ? "Action menu" : label.replace(/[.:]+$/, ""));
 
 backtalk.onActions((item) => {
+  if ((item.id || "").endsWith("video_info_view")) {
+    const menu = item.find({ id: "contextual_menu_anchor" });
+    return menu ? [{ title: "Action menu", run: () => menu.click() }] : undefined;
+  }
   if (!item.clickable || !(isVideo(item) || item.className.endsWith("Button"))) return;
   return item
     .findAll({ className: "Button" }, MAX_BUTTONS)
