@@ -1,7 +1,7 @@
 export const manifest = {
   id: 'play-store-actions',
   name: 'Play Store row actions',
-  version: '1.0',
+  version: '1.1',
   author: 'Aryan Choudhary',
   minApiVersion: 1,
   testedApiVersion: 1,
@@ -12,13 +12,17 @@ export const manifest = {
   // buttons. actions: pressing them.
   permissions: ['screen', 'actions', 'speech', 'input'],
   // Play Store's view ids are all the same and its wording changes with the language, so a button
-  // is told by its place: anything that can be pressed inside a row that can be pressed.
+  // is told by its place: anything that can be pressed inside a row that can be pressed. Only the
+  // two kinds of button a row has are named, because the account button is a row around an
+  // old-style view that holds its name, and hiding that view leaves nothing to read.
   rules: [
-    { match: { clickable: true, inside: { clickable: true, className: 'android.view.View' } }, hide: 'all' },
+    { match: { clickable: true, className: 'android.view.View', inside: { clickable: true, className: 'android.view.View' } }, hide: 'all' },
+    { match: { clickable: true, className: 'android.widget.ImageView', inside: { clickable: true, className: 'android.view.View' } }, hide: 'all' },
   ],
 };
 
 const MAX_BUTTONS = 8;
+const BUTTON_CLASSES = ['android.view.View', 'android.widget.ImageView'];
 const LABEL_DEPTH = 3;
 
 // The Update button has no name of its own; the name is on an item inside it.
@@ -36,7 +40,7 @@ backtalk.onActions((item) => {
   if (!item.clickable || item.className !== 'android.view.View') return;
   const actions = [];
   for (const button of item.findAll({ clickable: true }, MAX_BUTTONS)) {
-    if (button.equals(item)) continue;
+    if (button.equals(item) || !BUTTON_CLASSES.includes(button.className)) continue;
     const title = labelOf(button).trim();
     if (title) actions.push({ title, run: () => button.click() });
   }
