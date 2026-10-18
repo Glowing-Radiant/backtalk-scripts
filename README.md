@@ -6,7 +6,7 @@ Scripts that make apps easier to use with [Backtalk](https://github.com/trypsynt
 
 Add this repository as a script source in Backtalk:
 
-1. Go to **Advanced settings** > **Scripts** > **Script sources**.
+1. Go to **Apps** > **Scripts** > **Script sources** in Backtalk settings.
 2. Choose **Add source**, and enter `github.com/trypsynth/backtalk-scripts`.
 3. Open the source, and choose a script to install.
 
